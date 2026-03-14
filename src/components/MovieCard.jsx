@@ -48,16 +48,16 @@ const MovieCard = ({ item, mediaType }) => {
         {/* Bookmark / Watchlist button */}
         <button
           onClick={handleBookmarkClick}
-          className={`absolute top-2 left-2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 z-10 cursor-pointer ${inWatchlist
-              ? 'bg-brand-yellow/90 text-black scale-100'
-              : 'bg-black/50 backdrop-blur-sm text-white opacity-0 group-hover:opacity-100 hover:bg-black/70'
+          className={`absolute top-0 left-0 size-10 rounded-full flex items-center justify-center transition-all duration-300 z-10 cursor-pointer ${inWatchlist
+            ? 'bg-transparent text-yellow-500 scale-100'
+            : 'bg-black/50 backdrop-blur-sm text-white opacity-0 group-hover:opacity-100 hover:bg-black/70'
             } ${justToggled ? 'scale-125' : ''}`}
           title={inWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
         >
           {inWatchlist ? (
-            <BookmarkSolidIcon className="size-4" />
+            <BookmarkSolidIcon className="size-5" />
           ) : (
-            <BookmarkIcon className="size-4" />
+            <BookmarkIcon className="size-5" />
           )}
         </button>
         {/* Title overlay */}

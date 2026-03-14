@@ -26,7 +26,7 @@ const BottomNav = () => {
   };
 
   return (
-    <nav className="fixed bottom-1 left-0 right-0 bg-black/40 mx-auto w-[95%] md:w-[50%] border-t border-zinc-800 z-50 lg:hidden backdrop-blur-md rounded-full">
+    <nav className="fixed bottom-1 left-0 right-0 bg-black/35 mx-auto w-[95%] md:w-[50%] border-t-2 border-zinc-700/70 z-50 lg:hidden backdrop-blur rounded-full">
       <div className="max-w-2xl mx-auto flex justify-around items-center h-16">
         {navItems.map((item) => (
           <NavLink

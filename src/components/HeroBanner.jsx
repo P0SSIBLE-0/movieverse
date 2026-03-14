@@ -110,11 +110,11 @@ function HeroBanner() {
                   to={`/${slide.media_type || "movie"}/${slide.id}`}
                   className="bg-white/30 backdrop-blur-sm text-white px-4 py-2 md:px-6 md:py-2.5 rounded-full font-semibold flex items-center space-x-2 hover:bg-opacity-90 transition-colors text-sm md:text-base "
                 >
-                  <PlayIcon className="w-5 h-5" />
+                  <PlayIcon className="size-5" />
                   <span>Watch</span>
                 </Link>
                 <button
-                  className={`backdrop-blur-sm px-4 py-2 md:py-3 rounded-full font-semibold flex items-center space-x-2 transition-all duration-300 text-sm md:text-base cursor-pointer  ${isInWatchlist(slide.id, slide.media_type || 'movie')
+                  className={`backdrop-blur-sm px-4 py-2 md:py-3 rounded-full font-semibold flex items-center justify-center md:space-x-2 transition-all duration-300 text-sm md:text-base cursor-pointer  ${isInWatchlist(slide.id, slide.media_type || 'movie')
                     ? 'bg-brand-yellow/25 text-brand-yellow  hover:bg-brand-yellow/35'
                     : 'bg-white/20 text-white hover:bg-white/30'
                     }`}
@@ -126,9 +126,9 @@ function HeroBanner() {
                   }
                 >
                   {isInWatchlist(slide.id, slide.media_type || 'movie') ? (
-                    <BookmarkSolidIcon className="w-5 h-5" />
+                    <BookmarkSolidIcon className="size-5" />
                   ) : (
-                    <BookmarkIcon className="w-5 h-5" />
+                    <BookmarkIcon className="size-5" />
                   )}
                   <span className="hidden md:block">
                     {isInWatchlist(slide.id, slide.media_type || 'movie')
