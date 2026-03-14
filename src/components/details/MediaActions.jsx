@@ -28,7 +28,7 @@ const MediaActions = ({ onPlayStream, onPlayTrailer, hasStreamUrl, mediaItem }) 
         <PlayIcon className="w-5 h-5" />
         <span>Watch Now</span>
       </button>
-      
+
       {onPlayTrailer && (
         <button
           onClick={onPlayTrailer}
@@ -38,14 +38,13 @@ const MediaActions = ({ onPlayStream, onPlayTrailer, hasStreamUrl, mediaItem }) 
           <span>Trailer</span>
         </button>
       )}
-      
+
       <button
         onClick={handleToggleWatchlist}
-        className={`backdrop-blur-sm px-4 py-2 md:px-6 md:py-2.5 rounded-md font-semibold flex items-center space-x-2 transition-all duration-300 text-sm md:text-base cursor-pointer ${
-          inWatchlist
-            ? 'bg-brand-yellow/20 text-brand-yellow border border-brand-yellow/40 hover:bg-brand-yellow/30'
-            : 'bg-white/10 text-white hover:bg-white/20'
-        } ${justToggled ? 'scale-95' : 'scale-100'}`}
+        className={`backdrop-blur-sm px-4 py-2 md:px-6 md:py-2.5 rounded-md font-semibold flex items-center justify-center space-x-2 transition-all duration-300 text-sm md:text-base cursor-pointer ${inWatchlist
+          ? 'bg-brand-yellow/20 text-brand-yellow hover:bg-brand-yellow/30'
+          : 'bg-white/10 text-white hover:bg-white/20'
+          } ${justToggled ? 'scale-95' : 'scale-100'}`}
       >
         {inWatchlist ? (
           <BookmarkSolidIcon className={`w-5 h-5 transition-transform duration-300 ${justToggled ? 'scale-125' : 'scale-100'}`} />

@@ -28,7 +28,7 @@ const DetailsPage = () => {
   const [streamError, setStreamError] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
   const [showStreamPlayer, setShowStreamPlayer] = useState(false);
-  const type = mediaType === "anime" ? "tv" : mediaType; 
+  const type = mediaType === "anime" ? "tv" : mediaType;
   const {
     data: details,
     loading: detailsLoading,
@@ -177,7 +177,7 @@ const DetailsPage = () => {
       <div className="container mx-auto px-4 md:px-8 lg:px-12 fixed z-30 top-4">
         <button
           onClick={handleGoBack}
-          className="mb-3 md:mb-0 inline-flex items-center space-x-1.5 text-muted-foreground hover:text-brand-yellow transition-colors text-sm sm:text-sm rounded-full px-3 py-2 bg-zinc-800/25 hover:bg-zinc-800/60 backdrop-blur-sm cursor-pointer border border-zinc-800"
+          className="mb-3 md:mb-0 inline-flex items-center space-x-1.5 text-muted-foreground hover:text-brand-yellow transition-colors text-sm sm:text-sm rounded-full px-3 py-2 bg-zinc-800/25 hover:bg-zinc-800/60 backdrop-blur-sm cursor-pointer border border-zinc-800/40"
           aria-label="Go back to previous page"
         >
           <ArrowLeftIcon className="size-4 sm:size-5" />
@@ -230,7 +230,7 @@ const DetailsPage = () => {
       {/* Stream Player */}
       {showStreamPlayer && streamEmbedUrl && (
         <div className="container mx-auto px-4 md:px-8 lg:px-12 py-8 md:py-12">
-          
+
           {/* Error Message */}
           {streamError && (
             <div className="bg-red-900/50 text-red-200 p-3 flex justify-between items-center">
@@ -269,9 +269,8 @@ const DetailsPage = () => {
             onError={(error) => {
               console.error("Stream error:", error);
               setStreamError(
-                `Failed to load stream from ${
-                  STREAMING_PROVIDERS.find((p) => p.id === selectedProvider)
-                    ?.name || "provider"
+                `Failed to load stream from ${STREAMING_PROVIDERS.find((p) => p.id === selectedProvider)
+                  ?.name || "provider"
                 }. Trying another source...`
               );
 
@@ -300,11 +299,10 @@ const DetailsPage = () => {
                   setStreamError(null);
                   setRetryKey((prev) => prev + 1);
                 }}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  selectedProvider === provider.id
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${selectedProvider === provider.id
                     ? "bg-brand-yellow text-black"
                     : "bg-zinc-800 hover:bg-zinc-700 text-white"
-                }`}
+                  }`}
               >
                 {provider.name}
               </button>

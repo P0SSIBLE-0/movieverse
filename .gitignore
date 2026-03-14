@@ -15,6 +15,7 @@ dist-ssr
 .env.local
 .env.development
 .env 
+.npmrc
 
 
 # Editor directories and files

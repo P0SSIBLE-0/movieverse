@@ -73,4 +73,10 @@ export const fetchGenreTVShows = (genreId, page = 1) =>
       },
     });
 
+export const fetchPersonDetails = (personId) =>
+  api.get(`/person/${personId}`);
+
+export const fetchPersonCredits = (personId) =>
+  api.get(`/person/${personId}/combined_credits`);
+
 export default api;
