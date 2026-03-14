@@ -11,6 +11,7 @@ import SearchPage from './pages/SearchPage';
 import ExplorePage from './pages/ExplorePage';
 import WatchlistPage from './pages/WatchlistPage';
 import NotFound from './pages/NotFound';
+import CastMemberPage from './pages/CastMemberPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path="/search" element={<SearchPage />} />
               <Route path="/explore/:query" element={<ExplorePage />} />
               <Route path="/watchlist" element={<WatchlistPage />} />
+              <Route path="/person/:id" element={<CastMemberPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
