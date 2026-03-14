@@ -7,9 +7,12 @@ import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 
 import { useAppContext } from "../context/AppContext";
+import { useWatchlist } from "../context/WatchlistContext";
 import { fetchTrending } from "../services/tmdbApi";
-import { PlayIcon, PlusIcon, StarIcon } from "../components/icons"; // Create these simple SVG icons
-import { Link } from "react-router-dom"; // For navigation
+import { PlayIcon, StarIcon } from "../components/icons";
+import { Link } from "react-router-dom";
+import { BookmarkIcon } from "@heroicons/react/24/outline";
+import { BookmarkIcon as BookmarkSolidIcon } from "@heroicons/react/24/solid";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -19,6 +22,7 @@ function HeroBanner() {
   const [heroSlides, setHeroSlides] = useState([]);
   const [loading, setLoading] = useState(true);
   const { getImageUrl, loadingConfig } = useAppContext();
+  const { toggleWatchlist, isInWatchlist } = useWatchlist();
 
   useEffect(() => {
     if (loadingConfig) return; // Wait for API config
@@ -110,17 +114,27 @@ function HeroBanner() {
                   <span>Watch</span>
                 </Link>
                 <button
-                  className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 md:px-4 md:py-3 rounded-full font-semibold flex items-center space-x-2 hover:bg-white/30 transition-colors text-sm md:text-base"
+                  className={`backdrop-blur-sm px-4 py-2 md:py-3 rounded-full font-semibold flex items-center space-x-2 transition-all duration-300 text-sm md:text-base cursor-pointer  ${isInWatchlist(slide.id, slide.media_type || 'movie')
+                    ? 'bg-brand-yellow/25 text-brand-yellow  hover:bg-brand-yellow/35'
+                    : 'bg-white/20 text-white hover:bg-white/30'
+                    }`}
                   onClick={() =>
-                    alert(
-                      `Add ${
-                        slide.title || slide.name
-                      } to watchlist (not implemented)`
-                    )
+                    toggleWatchlist({
+                      ...slide,
+                      media_type: slide.media_type || 'movie',
+                    })
                   }
                 >
-                  <PlusIcon className="w-5 h-5" />
-                  {/* <span>Watchlist</span> */}
+                  {isInWatchlist(slide.id, slide.media_type || 'movie') ? (
+                    <BookmarkSolidIcon className="w-5 h-5" />
+                  ) : (
+                    <BookmarkIcon className="w-5 h-5" />
+                  )}
+                  <span className="hidden md:block">
+                    {isInWatchlist(slide.id, slide.media_type || 'movie')
+                      ? 'In Watchlist'
+                      : 'Watchlist'}
+                  </span>
                 </button>
               </div>
             </div>

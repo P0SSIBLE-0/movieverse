@@ -213,6 +213,17 @@ const DetailsPage = () => {
           }
           hasStreamUrl={!!streamEmbedUrl}
           onImageError={(e) => handleImageError(e, getImageUrl(null, "w500"))}
+          mediaItem={{
+            id: Number(id),
+            media_type: mediaType,
+            title: itemDetails?.title,
+            name: itemDetails?.name,
+            poster_path,
+            vote_average,
+            release_date: itemDetails?.release_date,
+            first_air_date: itemDetails?.first_air_date,
+            overview,
+          }}
         />
       </div>
 

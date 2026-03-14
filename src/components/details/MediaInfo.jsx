@@ -19,7 +19,8 @@ const MediaInfo = ({
   onPlayStream,
   onPlayTrailer,
   hasStreamUrl,
-  onImageError
+  onImageError,
+  mediaItem
 }) => {
   return (
     <div className="flex flex-col md:flex-row gap-6 md:gap-10">
@@ -92,6 +93,7 @@ const MediaInfo = ({
           onPlayStream={onPlayStream}
           onPlayTrailer={onPlayTrailer}
           hasStreamUrl={hasStreamUrl}
+          mediaItem={mediaItem}
         />
       </div>
     </div>
