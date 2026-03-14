@@ -94,8 +94,8 @@ const WatchlistPage = () => {
               key={tab.key}
               onClick={() => setFilter(tab.key)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${filter === tab.key
-                  ? 'bg-brand-yellow text-black'
-                  : 'bg-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-700'
+                ? 'bg-brand-yellow text-black'
+                : 'bg-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-700'
                 }`}
             >
               {tab.label}
@@ -147,7 +147,7 @@ const WatchlistPage = () => {
                       </div>
                     )}
                     {/* Media type badge */}
-                    <div className="absolute top-2 right-10 bg-zinc-900/70 backdrop-blur-sm text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase text-zinc-300 tracking-wider">
+                    <div className="absolute top-2 right-2 bg-zinc-900/70 backdrop-blur-sm text-[10px] font-semibold px-2 py-1 rounded-full uppercase text-zinc-300 tracking-wider">
                       {item.media_type}
                     </div>
                     {/* Gradient overlay */}
@@ -173,10 +173,10 @@ const WatchlistPage = () => {
                     e.stopPropagation();
                     handleRemove(item.id, item.media_type);
                   }}
-                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-red-500/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-500 hover:scale-110 z-10 cursor-pointer"
+                  className="absolute bottom-2 right-2 size-7 rounded-full bg-red-500/70 backdrop-blur-sm hidden md:flex items-center justify-center md:opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-500 hover:scale-110 z-10 cursor-pointer"
                   title="Remove from watchlist"
                 >
-                  <TrashIcon className="w-3.5 h-3.5 text-white" />
+                  <TrashIcon className="size-3.5 text-white" />
                 </button>
               </div>
             );

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @theme {
   --color-brand-bg: #101010;
   --color-brand-card: #181818;
@@ -13,6 +14,7 @@
   --font-sans: 'Inter', sans-serif;
   --font-brand: 'DM Sans', sans-serif;
 }
+
 body {
   padding: 0;
   margin: 0;
@@ -20,20 +22,28 @@ body {
   font-family: var(--font-brand);
   background-color: var(--color-brand-bg);
 }
+
 /* index.css or global stylesheet */
 .scrollbar-hide {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
 }
+
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
+  /* Chrome, Safari */
 }
 
 .swiper-button-prev,
 .swiper-button-next {
-  color: #ffd321; /* Tailwind's yellow-400 */
-  background-color: rgb(24, 24, 24); /* Matches your brand-card */
-  border-radius: 9999px; /* fully rounded */
+  color: #ffd321;
+  /* Tailwind's yellow-400 */
+  background-color: rgb(24, 24, 24);
+  /* Matches your brand-card */
+  border-radius: 9999px;
+  /* fully rounded */
   padding: 8px;
   width: 32px;
   height: 32px;
