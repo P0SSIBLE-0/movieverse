@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+dev-dist
 dist-ssr
 *.local
 *.env
@@ -17,9 +18,10 @@ dist-ssr
 .env 
 .npmrc
 
-
 # Editor directories and files
-dev-dist
+sw.js
+.agents
+skills-lock.json
 .vscode/*
 !.vscode/extensions.json
 .idea

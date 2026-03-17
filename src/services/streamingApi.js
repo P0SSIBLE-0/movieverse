@@ -2,21 +2,21 @@
 export const STREAMING_PROVIDERS = [
   {
     id: 'vidcore',
-    name: 'VidCore',
+    name: 'VidCore ⚡',
     getMovieUrl: (id) => `https://vidcore.net/movie/${id}?theme=ffd321&poster=true`,
     getTvUrl: (id, season, episode) =>
       `https://vidcore.net/tv/${id}/${season}/${episode}?theme=ffd321&poster=true`
   },
   {
     id: 'vidfast',
-    name: 'VidFast',
+    name: 'VidFast ⚡',
     getMovieUrl: (id) => `https://vidfast.pro/movie/${id}?theme=ffd321&poster=true`,
     getTvUrl: (id, season, episode) =>
       `https://vidfast.pro/tv/${id}/${season}/${episode}?theme=ffd321&poster=true&nextButton=true&autoNext=true`
   },
   {
     id: 'vidnest',
-    name: 'VidNest',
+    name: 'VidNest ⚡',
     getMovieUrl: (id) => `https://vidnest.fun/movie/${id}`,
     getTvUrl: (id, season, episode) =>
       `https://vidnest.fun/tv/${id}/${season}/${episode}`

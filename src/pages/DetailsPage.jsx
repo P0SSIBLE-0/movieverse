@@ -5,13 +5,12 @@ import useFetch from "../hooks/useFetch";
 import { fetchDetails, getImageUrl } from "../services/tmdbApi";
 import VideoPlayerModal from "../components/VideoPlayerModal";
 import Spinner from "../components/Spinner";
-import MediaHeader from "../components/details/MediaHeader";
 import MediaInfo from "../components/details/MediaInfo";
 import StreamPlayer from "../components/details/StreamPlayer";
 import CastSection from "../components/details/CastSection";
 import VideosSection from "../components/details/VideosSection";
 import RecommendationsSection from "../components/details/RecommendationsSection";
-import { ArrowLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { STREAMING_PROVIDERS } from "../services/streamingApi";
 
 const DetailsPage = () => {
@@ -19,7 +18,7 @@ const DetailsPage = () => {
   const navigate = useNavigate();
   const { loadingConfig } = useAppContext();
   const [selectedVideoKey, setSelectedVideoKey] = useState(null);
-  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(true);
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [selectedEpisode, setSelectedEpisode] = useState(1);
   const [selectedProvider, setSelectedProvider] = useState(
@@ -109,22 +108,32 @@ const DetailsPage = () => {
       (type === "tv" && id && selectedSeason > 0 && selectedEpisode > 0)
     ) {
       setShowStreamPlayer(true);
+      // Scroll to player after render
+      setTimeout(() => {
+        document.getElementById('stream-player-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
+  };
+
+  const handleProviderChange = (providerId) => {
+    setSelectedProvider(providerId);
+    setStreamError(null);
+    setRetryKey((prev) => prev + 1);
   };
 
   // Loading and error states
   if (loadingConfig || detailsLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-bg text-white">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#101010] text-white gap-4">
         <Spinner />
-        <p className="ml-4 text-xl">Loading Details...</p>
+        <p className="text-sm text-white/40 tracking-wide">Loading details…</p>
       </div>
     );
   }
 
   if (detailsError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-bg text-red-500 text-xl p-8 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#101010] text-red-400 text-lg p-8 text-center">
         Error loading details: {detailsError.message}
       </div>
     );
@@ -132,7 +141,7 @@ const DetailsPage = () => {
 
   if (!itemDetails) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-bg text-white text-xl">
+      <div className="min-h-screen flex items-center justify-center bg-[#101010] text-white/50 text-lg">
         No details available to display.
       </div>
     );
@@ -172,84 +181,43 @@ const DetailsPage = () => {
     [];
 
   return (
-    <div className="bg-brand-bg text-white min-h-screen pb-16 md:pb-8 overflow-x-hidden">
-      {/* Back Button */}
-      <div className="container mx-auto px-4 md:px-8 lg:px-12 fixed z-30 top-4">
+    <div className="bg-[#101010] text-white min-h-screen pb-16 md:pb-8 overflow-x-hidden">
+      {/* Back Button — Fixed */}
+      <div className="fixed z-50 top-4 left-4 md:left-8">
         <button
           onClick={handleGoBack}
-          className="mb-3 md:mb-0 inline-flex items-center space-x-1.5 text-muted-foreground hover:text-brand-yellow transition-colors text-sm sm:text-sm rounded-full px-3 py-2 bg-zinc-800/25 hover:bg-zinc-800/60 backdrop-blur-sm cursor-pointer border border-zinc-800/40"
+          className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-sm rounded-xl px-3.5 py-2.5 bg-black/40 hover:bg-black/60 backdrop-blur-md border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 cursor-pointer"
           aria-label="Go back to previous page"
         >
-          <ArrowLeftIcon className="size-4 sm:size-5" />
+          <ArrowLeftIcon className="size-4" />
           <span>Back</span>
         </button>
       </div>
 
-      {/* Media Header */}
-      <MediaHeader
-        backdropPath={getImageUrl(backdrop_path, "original")}
-        title={itemTitle}
-        onImageError={(e) => handleImageError(e, getImageUrl(null, "original"))}
-      />
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 md:px-8 lg:px-12 -mt-24 md:-mt-48 relative z-10">
-        <MediaInfo
-          posterPath={getImageUrl(poster_path, "w500")}
-          title={itemTitle}
-          tagline={tagline}
-          genres={genres}
-          mediaType={mediaType}
-          voteAverage={vote_average}
-          releaseDate={itemReleaseDate}
-          runtime={itemRuntime}
-          numberOfSeasons={number_of_seasons}
-          overview={overview}
-          onPlayStream={handlePlayStream}
-          onPlayTrailer={
-            officialTrailers[0]
-              ? () => playTrailer(officialTrailers[0].key)
-              : null
-          }
-          hasStreamUrl={!!streamEmbedUrl}
-          onImageError={(e) => handleImageError(e, getImageUrl(null, "w500"))}
-          mediaItem={{
-            id: Number(id),
-            media_type: mediaType,
-            title: itemDetails?.title,
-            name: itemDetails?.name,
-            poster_path,
-            vote_average,
-            release_date: itemDetails?.release_date,
-            first_air_date: itemDetails?.first_air_date,
-            overview,
-          }}
-        />
-      </div>
-
-      {/* Stream Player */}
+      {/* ─── Section 1: Stream Player ─── */}
       {showStreamPlayer && streamEmbedUrl && (
-        <div className="container mx-auto px-4 md:px-8 lg:px-12 py-8 md:py-12">
-
+        <div className="pt-0">
           {/* Error Message */}
           {streamError && (
-            <div className="bg-red-900/50 text-red-200 p-3 flex justify-between items-center">
-              <span>{streamError}</span>
-              <button
-                onClick={() => {
-                  setStreamError(null);
-                  setRetryKey((prev) => prev + 1);
-                }}
-                className="ml-4 px-3 py-1 bg-red-800 hover:bg-red-700 rounded text-sm"
-              >
-                Retry
-              </button>
+            <div className="container mx-auto px-4 md:px-8">
+              <div className="bg-red-500/10 border border-red-500/20 text-red-300 rounded-xl p-3 flex justify-between items-center text-sm mb-2">
+                <span>{streamError}</span>
+                <button
+                  onClick={() => {
+                    setStreamError(null);
+                    setRetryKey((prev) => prev + 1);
+                  }}
+                  className="ml-4 px-3 py-1 bg-red-500/20 hover:bg-red-500/30 rounded-lg text-sm transition-colors cursor-pointer"
+                >
+                  Retry
+                </button>
+              </div>
             </div>
           )}
 
-          {/* Stream Player */}
           <StreamPlayer
             key={`${streamEmbedUrl}-${retryKey}`}
+            id={id}
             mediaType={mediaType}
             title={itemTitle}
             streamEmbedUrl={streamEmbedUrl}
@@ -273,7 +241,6 @@ const DetailsPage = () => {
                   ?.name || "provider"
                 }. Trying another source...`
               );
-
               // Auto-switch to next provider on error
               const currentIndex = STREAMING_PROVIDERS.findIndex(
                 (p) => p.id === selectedProvider
@@ -282,45 +249,55 @@ const DetailsPage = () => {
                 setSelectedProvider(STREAMING_PROVIDERS[currentIndex + 1].id);
               }
             }}
+            selectedProvider={selectedProvider}
+            onProviderChange={handleProviderChange}
           />
-          {/* Provider Selection */}
-          {/* <div className="text-center text-sm text-yellow-500 bg-yellow-500/30 border border-yellow-500 rounded-lg p-2 w-fit mx-auto px-4 mb-2 flex items-center justify-between">
-            use adblocker for better watching experience 
-            <span>
-              <XMarkIcon className="w-4 h-4"/>
-            </span>
-          </div> */}
-          <div className="flex flex-wrap gap-2 p-4 bg-zinc-900/80 rounded-t-lg">
-            {STREAMING_PROVIDERS.map((provider) => (
-              <button
-                key={provider.id}
-                onClick={() => {
-                  setSelectedProvider(provider.id);
-                  setStreamError(null);
-                  setRetryKey((prev) => prev + 1);
-                }}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${selectedProvider === provider.id
-                    ? "bg-brand-yellow text-black"
-                    : "bg-zinc-800 hover:bg-zinc-700 text-white"
-                  }`}
-              >
-                {provider.name}
-              </button>
-            ))}
-          </div>
-
         </div>
       )}
 
-      {/* Cast Section */}
+      {/* ─── Section 2: Movie Info ─── */}
+      <MediaInfo
+        posterPath={getImageUrl(poster_path, "w500")}
+        backdropPath={getImageUrl(backdrop_path, "original")}
+        title={itemTitle}
+        tagline={tagline}
+        genres={genres}
+        mediaType={mediaType}
+        voteAverage={vote_average}
+        releaseDate={itemReleaseDate}
+        runtime={itemRuntime}
+        numberOfSeasons={number_of_seasons}
+        overview={overview}
+        onPlayStream={handlePlayStream}
+        onPlayTrailer={
+          officialTrailers[0]
+            ? () => playTrailer(officialTrailers[0].key)
+            : null
+        }
+        hasStreamUrl={!!streamEmbedUrl}
+        onImageError={(e) => handleImageError(e, getImageUrl(null, "w500"))}
+        mediaItem={{
+          id: Number(id),
+          media_type: mediaType,
+          title: itemDetails?.title,
+          name: itemDetails?.name,
+          poster_path,
+          vote_average,
+          release_date: itemDetails?.release_date,
+          first_air_date: itemDetails?.first_air_date,
+          overview,
+        }}
+      />
+
+      {/* ─── Section 3: Top Cast ─── */}
       {topCast.length > 0 && <CastSection cast={topCast} />}
 
-      {/* Videos Section */}
+      {/* ─── Videos Section (only when player is hidden) ─── */}
       {!showStreamPlayer && officialTrailers.length > 0 && (
         <VideosSection videos={officialTrailers} onVideoSelect={playTrailer} />
       )}
 
-      {/* Recommendations Section */}
+      {/* ─── Section 4: Similar Movies ─── */}
       {similarItems.length > 0 && (
         <RecommendationsSection
           items={similarItems}
