@@ -167,11 +167,11 @@ const DetailsPage = () => {
 
   return (
     <div className="bg-[#050505] text-[#e5e5e5] min-h-screen pb-16 md:pb-8 font-sans selection:bg-white/10">
-      {/* Header — Static instead of fixed to prevent overlap */}
-      <header className="w-full px-4 md:px-8 py-6 max-w-[1400px] mx-auto flex items-center relative z-50">
+      {/* Header */}
+      <header className="w-full px-4 md:px-8 py-6 max-w-[1400px] mx-auto flex items-center relative">
         <button
           onClick={handleGoBack}
-          className="inline-flex items-center gap-2 text-white/40 hover:text-white text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer"
+          className="inline-flex items-center gap-2 text-white/40 backdrop-blur-md hover:text-white text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer"
           aria-label="Go back to previous page"
         >
           <ArrowLeftIcon className="size-4" />
@@ -181,6 +181,42 @@ const DetailsPage = () => {
 
       {/* Main Container */}
       <div className="max-w-[1400px] mx-auto px-2 md:px-8">
+
+
+        {/* ─── Section 2: Movie Info ─── */}
+        <div className="mb-10">
+          <MediaInfo
+            posterPath={getImageUrl(poster_path, "w500")}
+            backdropPath={getImageUrl(backdrop_path, "original")}
+            title={itemTitle}
+            tagline={tagline}
+            genres={genres}
+            mediaType={mediaType}
+            voteAverage={vote_average}
+            releaseDate={itemReleaseDate}
+            runtime={itemRuntime}
+            numberOfSeasons={number_of_seasons}
+            overview={overview}
+            onPlayTrailer={
+              officialTrailers[0]
+                ? () => playTrailer(officialTrailers[0].key)
+                : null
+            }
+            onImageError={(e) => handleImageError(e, getImageUrl(null, "w500"))}
+            mediaItem={{
+              id: Number(id),
+              media_type: mediaType,
+              title: itemDetails?.title,
+              name: itemDetails?.name,
+              poster_path,
+              vote_average,
+              release_date: itemDetails?.release_date,
+              first_air_date: itemDetails?.first_air_date,
+              overview,
+            }}
+          />
+        </div>
+
         {/* ─── Section 1: Stream Player (Always On) ─── */}
         {streamEmbedUrl && (
           <div className="w-full mb-16 md:mb-24 mt-2">
@@ -237,40 +273,6 @@ const DetailsPage = () => {
             />
           </div>
         )}
-
-        {/* ─── Section 2: Movie Info ─── */}
-        <div className="mb-10">
-          <MediaInfo
-            posterPath={getImageUrl(poster_path, "w500")}
-            backdropPath={getImageUrl(backdrop_path, "original")}
-            title={itemTitle}
-            tagline={tagline}
-            genres={genres}
-            mediaType={mediaType}
-            voteAverage={vote_average}
-            releaseDate={itemReleaseDate}
-            runtime={itemRuntime}
-            numberOfSeasons={number_of_seasons}
-            overview={overview}
-            onPlayTrailer={
-              officialTrailers[0]
-                ? () => playTrailer(officialTrailers[0].key)
-                : null
-            }
-            onImageError={(e) => handleImageError(e, getImageUrl(null, "w500"))}
-            mediaItem={{
-              id: Number(id),
-              media_type: mediaType,
-              title: itemDetails?.title,
-              name: itemDetails?.name,
-              poster_path,
-              vote_average,
-              release_date: itemDetails?.release_date,
-              first_air_date: itemDetails?.first_air_date,
-              overview,
-            }}
-          />
-        </div>
 
         {/* ─── Section 3: Top Cast ─── */}
         {topCast.length > 0 && <CastSection cast={topCast} />}

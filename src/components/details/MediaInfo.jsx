@@ -25,23 +25,23 @@ const MediaInfo = ({
 
   return (
     <section className="relative w-full px-2 md:px-8" id="media-info-section">
-      {/* Ultra-minimalist Dimmed Backdrop */}
-      <div className="absolute top-[-200px] left-0 w-[100vw] ml-[calc(-50vw+50%)] h-[80vh] z-0 overflow-hidden opacity-[0.15] pointer-events-none">
+      {/* Backdrop */}
+      <div className="absolute top-[-100px] left-0 w-[100vw] ml-[calc(-50vw+50%)] h-[80vh] z-0 overflow-hidden opacity-20 pointer-events-none">
         {backdropPath && (
           <img
             src={backdropPath}
             alt=""
-            className="w-full h-full object-cover object-top blur-xl scale-125"
+            className="w-full h-full object-cover blur-sm"
             aria-hidden="true"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050505]/70 to-[#050505]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050505]/40 to-[#050505bd]" />
       </div>
 
       {/* Content — Grid layout */}
       <div className="relative z-10 pt-4 pb-5">
         <div className="flex flex-col items-center md:flex-row gap-8 lg:gap-16 md:items-start">
-          {/* Poster — Sharp & Minimal */}
+          {/* Poster */}
           <div className="w-[180px] max-w-[200px] md:max-w-none md:w-[260px] lg:w-[300px] flex-shrink-0">
             <img
               src={posterPath}
@@ -54,7 +54,7 @@ const MediaInfo = ({
           {/* Text Info */}
           <div className="flex-1 mt-6 md:mt-0 w-full max-w-4xl flex flex-col items-center md:items-start text-center md:text-left">
             {/* Title */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter leading-[1.1] mb-2 md:mb-3 uppercase">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter leading-[1.1] mb-2 md:mb-3 uppercase">
               {title}
             </h1>
 
