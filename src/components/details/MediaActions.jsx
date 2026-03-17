@@ -3,7 +3,7 @@ import { PlayIcon, BookmarkIcon } from '@heroicons/react/24/outline';
 import { BookmarkIcon as BookmarkSolidIcon, PlayIcon as PlaySolidIcon } from '@heroicons/react/24/solid';
 import { useWatchlist } from '../../context/WatchlistContext';
 
-const MediaActions = ({ onPlayStream, onPlayTrailer, hasStreamUrl, mediaItem }) => {
+const MediaActions = ({ onPlayTrailer, mediaItem }) => {
   const { toggleWatchlist, isInWatchlist } = useWatchlist();
   const [justToggled, setJustToggled] = useState(false);
 
@@ -20,17 +20,6 @@ const MediaActions = ({ onPlayStream, onPlayTrailer, hasStreamUrl, mediaItem }) 
 
   return (
     <div className="flex items-center flex-wrap gap-3">
-      {/* Watch Now — Primary CTA */}
-      <button
-        onClick={onPlayStream}
-        className="group relative flex items-center gap-2.5 px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 rounded-lg font-bold text-sm md:text-base transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 cursor-pointer overflow-hidden"
-        disabled={!hasStreamUrl}
-      >
-        {/* Shine effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-        <PlaySolidIcon className="w-5 h-5 relative z-10" />
-        <span className="relative z-10">Watch Now</span>
-      </button>
 
       {/* Trailer */}
       {onPlayTrailer && (

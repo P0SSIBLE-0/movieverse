@@ -26,7 +26,6 @@ const DetailsPage = () => {
   );
   const [streamError, setStreamError] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
-  const [showStreamPlayer, setShowStreamPlayer] = useState(false);
   const type = mediaType === "anime" ? "tv" : mediaType;
   const {
     data: details,
@@ -89,7 +88,6 @@ const DetailsPage = () => {
   // Reset state when mediaType or id changes
   useEffect(() => {
     window.scrollTo(0, 0);
-    setShowStreamPlayer(false);
     setSelectedSeason(1);
     setSelectedEpisode(1);
   }, [type, id]);
@@ -100,19 +98,6 @@ const DetailsPage = () => {
   const playTrailer = (key) => {
     setSelectedVideoKey(key);
     setShowVideoModal(true);
-  };
-
-  const handlePlayStream = () => {
-    if (
-      (type === "movie" && id) ||
-      (type === "tv" && id && selectedSeason > 0 && selectedEpisode > 0)
-    ) {
-      setShowStreamPlayer(true);
-      // Scroll to player after render
-      setTimeout(() => {
-        document.getElementById('stream-player-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
   };
 
   const handleProviderChange = (providerId) => {
@@ -181,130 +166,130 @@ const DetailsPage = () => {
     [];
 
   return (
-    <div className="bg-[#101010] text-white min-h-screen pb-16 md:pb-8 overflow-x-hidden">
-      {/* Back Button — Fixed */}
-      <div className="fixed z-50 top-4 left-4 md:left-8">
+    <div className="bg-[#050505] text-[#e5e5e5] min-h-screen pb-16 md:pb-8 font-sans selection:bg-white/10">
+      {/* Header — Static instead of fixed to prevent overlap */}
+      <header className="w-full px-4 md:px-8 py-6 max-w-[1400px] mx-auto flex items-center relative z-50">
         <button
           onClick={handleGoBack}
-          className="inline-flex items-center gap-1.5 text-white/60 hover:text-white text-sm rounded-xl px-3.5 py-2.5 bg-black/40 hover:bg-black/60 backdrop-blur-md border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 cursor-pointer"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-white text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer"
           aria-label="Go back to previous page"
         >
           <ArrowLeftIcon className="size-4" />
-          <span>Back</span>
+          <span>BACK</span>
         </button>
-      </div>
+      </header>
 
-      {/* ─── Section 1: Stream Player ─── */}
-      {showStreamPlayer && streamEmbedUrl && (
-        <div className="pt-0">
-          {/* Error Message */}
-          {streamError && (
-            <div className="container mx-auto px-4 md:px-8">
-              <div className="bg-red-500/10 border border-red-500/20 text-red-300 rounded-xl p-3 flex justify-between items-center text-sm mb-2">
-                <span>{streamError}</span>
-                <button
-                  onClick={() => {
-                    setStreamError(null);
-                    setRetryKey((prev) => prev + 1);
-                  }}
-                  className="ml-4 px-3 py-1 bg-red-500/20 hover:bg-red-500/30 rounded-lg text-sm transition-colors cursor-pointer"
-                >
-                  Retry
-                </button>
+      {/* Main Container */}
+      <div className="max-w-[1400px] mx-auto px-2 md:px-8">
+        {/* ─── Section 1: Stream Player (Always On) ─── */}
+        {streamEmbedUrl && (
+          <div className="w-full mb-16 md:mb-24 mt-2">
+            {/* Error Message */}
+            {streamError && (
+              <div className="container mx-auto px-4 md:px-8">
+                <div className="bg-red-500/10 border border-red-500/20 text-red-300 rounded-xl p-3 flex justify-between items-center text-sm mb-2">
+                  <span>{streamError}</span>
+                  <button
+                    onClick={() => {
+                      setStreamError(null);
+                      setRetryKey((prev) => prev + 1);
+                    }}
+                    className="ml-4 px-3 py-1 bg-red-500/20 hover:bg-red-500/30 rounded-lg text-sm transition-colors cursor-pointer"
+                  >
+                    Retry
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <StreamPlayer
-            key={`${streamEmbedUrl}-${retryKey}`}
-            id={id}
-            mediaType={mediaType}
+            <StreamPlayer
+              key={`${streamEmbedUrl}-${retryKey}`}
+              id={id}
+              mediaType={mediaType}
+              title={itemTitle}
+              streamEmbedUrl={streamEmbedUrl}
+              seasons={seasons}
+              selectedSeason={selectedSeason}
+              selectedEpisode={selectedEpisode}
+              onSeasonChange={(season) => {
+                setSelectedSeason(season);
+                setSelectedEpisode(1);
+              }}
+              onEpisodeChange={setSelectedEpisode}
+              episodesForSelectedSeason={episodesForSelectedSeason}
+              onError={(error) => {
+                console.error("Stream error:", error);
+                setStreamError(
+                  `Failed to load stream from ${STREAMING_PROVIDERS.find((p) => p.id === selectedProvider)
+                    ?.name || "provider"
+                  }. Trying another source...`
+                );
+                // Auto-switch to next provider on error
+                const currentIndex = STREAMING_PROVIDERS.findIndex(
+                  (p) => p.id === selectedProvider
+                );
+                if (currentIndex < STREAMING_PROVIDERS.length - 1) {
+                  setSelectedProvider(STREAMING_PROVIDERS[currentIndex + 1].id);
+                }
+              }}
+              selectedProvider={selectedProvider}
+              onProviderChange={handleProviderChange}
+            />
+          </div>
+        )}
+
+        {/* ─── Section 2: Movie Info ─── */}
+        <div className="mb-10">
+          <MediaInfo
+            posterPath={getImageUrl(poster_path, "w500")}
+            backdropPath={getImageUrl(backdrop_path, "original")}
             title={itemTitle}
-            streamEmbedUrl={streamEmbedUrl}
-            seasons={seasons}
-            selectedSeason={selectedSeason}
-            selectedEpisode={selectedEpisode}
-            onSeasonChange={(season) => {
-              setSelectedSeason(season);
-              setSelectedEpisode(1);
+            tagline={tagline}
+            genres={genres}
+            mediaType={mediaType}
+            voteAverage={vote_average}
+            releaseDate={itemReleaseDate}
+            runtime={itemRuntime}
+            numberOfSeasons={number_of_seasons}
+            overview={overview}
+            onPlayTrailer={
+              officialTrailers[0]
+                ? () => playTrailer(officialTrailers[0].key)
+                : null
+            }
+            onImageError={(e) => handleImageError(e, getImageUrl(null, "w500"))}
+            mediaItem={{
+              id: Number(id),
+              media_type: mediaType,
+              title: itemDetails?.title,
+              name: itemDetails?.name,
+              poster_path,
+              vote_average,
+              release_date: itemDetails?.release_date,
+              first_air_date: itemDetails?.first_air_date,
+              overview,
             }}
-            onEpisodeChange={setSelectedEpisode}
-            episodesForSelectedSeason={episodesForSelectedSeason}
-            onClose={() => {
-              setShowStreamPlayer(false);
-              setStreamError(null);
-            }}
-            onError={(error) => {
-              console.error("Stream error:", error);
-              setStreamError(
-                `Failed to load stream from ${STREAMING_PROVIDERS.find((p) => p.id === selectedProvider)
-                  ?.name || "provider"
-                }. Trying another source...`
-              );
-              // Auto-switch to next provider on error
-              const currentIndex = STREAMING_PROVIDERS.findIndex(
-                (p) => p.id === selectedProvider
-              );
-              if (currentIndex < STREAMING_PROVIDERS.length - 1) {
-                setSelectedProvider(STREAMING_PROVIDERS[currentIndex + 1].id);
-              }
-            }}
-            selectedProvider={selectedProvider}
-            onProviderChange={handleProviderChange}
           />
         </div>
-      )}
 
-      {/* ─── Section 2: Movie Info ─── */}
-      <MediaInfo
-        posterPath={getImageUrl(poster_path, "w500")}
-        backdropPath={getImageUrl(backdrop_path, "original")}
-        title={itemTitle}
-        tagline={tagline}
-        genres={genres}
-        mediaType={mediaType}
-        voteAverage={vote_average}
-        releaseDate={itemReleaseDate}
-        runtime={itemRuntime}
-        numberOfSeasons={number_of_seasons}
-        overview={overview}
-        onPlayStream={handlePlayStream}
-        onPlayTrailer={
-          officialTrailers[0]
-            ? () => playTrailer(officialTrailers[0].key)
-            : null
-        }
-        hasStreamUrl={!!streamEmbedUrl}
-        onImageError={(e) => handleImageError(e, getImageUrl(null, "w500"))}
-        mediaItem={{
-          id: Number(id),
-          media_type: mediaType,
-          title: itemDetails?.title,
-          name: itemDetails?.name,
-          poster_path,
-          vote_average,
-          release_date: itemDetails?.release_date,
-          first_air_date: itemDetails?.first_air_date,
-          overview,
-        }}
-      />
+        {/* ─── Section 3: Top Cast ─── */}
+        {topCast.length > 0 && <CastSection cast={topCast} />}
 
-      {/* ─── Section 3: Top Cast ─── */}
-      {topCast.length > 0 && <CastSection cast={topCast} />}
+        {/* ─── Videos Section ─── */}
+        {officialTrailers.length > 0 && (
+          <VideosSection videos={officialTrailers} onVideoSelect={playTrailer} />
+        )}
 
-      {/* ─── Videos Section (only when player is hidden) ─── */}
-      {!showStreamPlayer && officialTrailers.length > 0 && (
-        <VideosSection videos={officialTrailers} onVideoSelect={playTrailer} />
-      )}
+        {/* ─── Section 4: Similar Movies ─── */}
+        {similarItems.length > 0 && (
+          <RecommendationsSection
+            items={similarItems}
+            mediaType={mediaType}
+            title={mediaType === "movie" ? "Similar Movies" : "Similar Shows"}
+          />
+        )}
 
-      {/* ─── Section 4: Similar Movies ─── */}
-      {similarItems.length > 0 && (
-        <RecommendationsSection
-          items={similarItems}
-          mediaType={mediaType}
-          title={mediaType === "movie" ? "Similar Movies" : "Similar Shows"}
-        />
-      )}
+      </div>
 
       <VideoPlayerModal
         videoKey={selectedVideoKey}

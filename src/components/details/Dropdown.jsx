@@ -56,7 +56,7 @@ const Dropdown = ({
       {/* ── Panel ── */}
       {isOpen && (
         <div
-          className={`absolute top-full mt-2 w-56 bg-zinc-900/95 backdrop-blur-xl border border-white/[0.08] rounded-lg shadow-xl shadow-black/50 z-[100] overflow-hidden animate-in ${panelAlign === 'right' ? 'right-0' : 'left-0'
+          className={`absolute top-full mt-2 w-max min-w-[160px] max-w-[85vw] sm:w-56 bg-zinc-900/95 backdrop-blur-xl border border-white/[0.08] rounded-lg shadow-xl shadow-black/50 z-[100] overflow-hidden animate-in ${panelAlign === 'right' ? 'right-0' : 'left-0'
             }`}
         >
           {/* Heading */}

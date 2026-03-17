@@ -13,7 +13,7 @@ const RecommendationsSection = ({ items, mediaType, title }) => {
       {/* Top divider */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
 
-      <div className="container mx-auto px-4 md:px-8 lg:px-12">
+      <div className="container mx-auto px-2 md:px-8 lg:px-12">
         {/* Header */}
         <div className="flex justify-between items-center mb-6 md:mb-8">
           <div>

@@ -7,7 +7,7 @@ const MediaHeader = ({ backdropPath, title, onImageError }) => {
         className="w-full h-full object-cover object-center"
         onError={onImageError}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-brand-bg/70 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-brand-bg/60 to-transparent"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-brand-bg/70 via-brand-bg/30 to-transparent md:w-2/3"></div>
     </div>
   );

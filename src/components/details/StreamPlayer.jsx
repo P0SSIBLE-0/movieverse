@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { XMarkIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { ServerStackIcon, FilmIcon, ListBulletIcon } from '@heroicons/react/24/outline';
 import Dropdown from './Dropdown';
 import { STREAMING_PROVIDERS } from '../../services/streamingApi';
@@ -15,7 +15,6 @@ const StreamPlayer = ({
   onSeasonChange,
   onEpisodeChange,
   episodesForSelectedSeason,
-  onClose,
   onError,
   selectedProvider,
   onProviderChange,
@@ -60,7 +59,7 @@ const StreamPlayer = ({
   return (
     <section className="w-full relative z-20" id="stream-player-section">
       {/* Video Player */}
-      <div className="relative rounded-lg aspect-video w-full  bg-black/40 overflow-hidden">
+      <div className="relative aspect-video w-full bg-[#0a0a0a] overflow-hidden rounded-t-lg group">
         {streamEmbedUrl && (
           <iframe
             key={streamEmbedUrl}
@@ -72,17 +71,10 @@ const StreamPlayer = ({
           />
         )}
 
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 bg-black/60 hover:bg-black/80 backdrop-blur-sm rounded-full transition-all duration-300 z-10 group cursor-pointer"
-          aria-label="Close player"
-        >
-          <XMarkIcon className="w-5 h-5 text-white/70 group-hover:text-white" />
-        </button>
       </div>
 
-      <div className="bg-zinc-900/90 backdrop-blur-md border-t border-white/[0.04] px-4 md:px-6 py-3">
-        <div className="container mx-auto flex flex-wrap items-center gap-3">
+      <div className="bg-[#0f0f0f] border-t border-white/[0.02] px-4 md:px-6 py-4 rounded-b-lg">
+        <div className="container mx-auto flex flex-wrap items-center gap-4">
           {/* TV Season / Episode Dropdowns */}
           {type === 'tv' && seasonOptions.length > 0 && (
             <div className="flex items-center gap-3 m-auto md:mr-auto">
@@ -108,6 +100,7 @@ const StreamPlayer = ({
                   heading="Episodes"
                   placeholder="Episode"
                   minWidth="min-w-[145px]"
+                  panelAlign="right"
                 />
               )}
             </div>
