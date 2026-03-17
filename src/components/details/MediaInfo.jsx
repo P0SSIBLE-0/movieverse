@@ -52,9 +52,9 @@ const MediaInfo = ({
           </div>
 
           {/* Text Info */}
-          <div className="flex-1 mt-4 md:mt-0 w-full max-w-4xl">
+          <div className="flex-1 mt-6 md:mt-0 w-full max-w-4xl flex flex-col items-center md:items-start text-center md:text-left">
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter leading-[1.1] mb-2 uppercase">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter leading-[1.1] mb-2 md:mb-3 uppercase">
               {title}
             </h1>
 
@@ -66,7 +66,7 @@ const MediaInfo = ({
             )}
 
             {/* Minimal Metadata Row */}
-            <div className="flex flex-wrap items-center gap-6 mb-5 text-xs md:text-sm text-white/50 font-bold uppercase tracking-widest">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 sm:gap-4 md:gap-6 mb-5 text-[10px] sm:text-xs md:text-sm text-white/50 font-bold uppercase tracking-widest">
               {year && <span>{year}</span>}
               {runtime > 0 && (
                 <span>
@@ -96,7 +96,7 @@ const MediaInfo = ({
             )}
 
             {/* Glass Pill Tags */}
-            <div className="flex flex-wrap items-center gap-2 mb-8 text-xs md:text-sm font-medium">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-8 text-[11px] md:text-sm font-medium">
               {genres?.map((genre) => (
                 <Link
                   key={genre.id}

@@ -73,11 +73,11 @@ const StreamPlayer = ({
 
       </div>
 
-      <div className="bg-[#0f0f0f] border-t border-white/[0.02] px-4 md:px-6 py-4 rounded-b-lg">
-        <div className="container mx-auto flex flex-wrap items-center gap-4">
+      <div className="bg-[#0f0f0f] border-t border-white/[0.02] px-3 sm:px-4 md:px-6 py-4 rounded-b-lg">
+        <div className="container mx-auto flex flex-wrap items-center justify-center lg:justify-between gap-4">
           {/* TV Season / Episode Dropdowns */}
           {type === 'tv' && seasonOptions.length > 0 && (
-            <div className="flex items-center gap-3 m-auto md:mr-auto">
+            <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3">
               <Dropdown
                 options={seasonOptions}
                 value={selectedSeason}
@@ -107,7 +107,7 @@ const StreamPlayer = ({
           )}
 
           {/* Right side: Server Dropdown + Download */}
-          <div className="flex items-center gap-3 m-auto md:ml-auto">
+          <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3">
             <Dropdown
               options={serverOptions}
               value={selectedProvider}

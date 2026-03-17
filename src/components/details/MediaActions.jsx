@@ -19,7 +19,7 @@ const MediaActions = ({ onPlayTrailer, mediaItem }) => {
   };
 
   return (
-    <div className="flex items-center flex-wrap gap-3">
+    <div className="flex items-center justify-center md:justify-start flex-wrap gap-3 w-full">
 
       {/* Trailer */}
       {onPlayTrailer && (
