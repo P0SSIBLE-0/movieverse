@@ -21,7 +21,35 @@ const emptyData: PaginatedResponse<MediaItem> = {
 const isValidGenre = (genreId: number, genresList: Genre[]) =>
   genresList.some((genre) => genre.id === genreId);
 
-export const useExplore = (query: MediaType = 'movie', initialGenre: number | null = null) => {
+const getDefaultGenreId = (mediaType: MediaType) =>
+  defaultGenres[mediaType] ?? defaultGenres.tv;
+
+const resolveGenreId = (
+  requestedGenre: number | null,
+  genresList: Genre[],
+  mediaType: MediaType
+) => {
+  if (!genresList.length) {
+    return null;
+  }
+
+  if (requestedGenre && isValidGenre(requestedGenre, genresList)) {
+    return requestedGenre;
+  }
+
+  const defaultGenreId = getDefaultGenreId(mediaType);
+
+  if (isValidGenre(defaultGenreId, genresList)) {
+    return defaultGenreId;
+  }
+
+  return genresList[0]?.id ?? null;
+};
+
+export const useExplore = (
+  query: MediaType = 'movie',
+  requestedGenre: number | null = null
+) => {
   const [page, setPage] = useState(1);
   const [activeGenre, setActiveGenre] = useState<number | null>(null);
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -31,14 +59,8 @@ export const useExplore = (query: MediaType = 'movie', initialGenre: number | nu
 
   const requestId = useRef(0);
   const isInitializingGenres = useRef(false);
-  const currentQuery = useRef(query);
-
-  const getDefaultGenreId = (mediaType: MediaType) => defaultGenres[mediaType] ?? defaultGenres.tv;
 
   useEffect(() => {
-    const hasQueryChanged = currentQuery.current !== query;
-    currentQuery.current = query;
-
     let isMounted = true;
     const thisRequest = ++requestId.current;
     const controller = new AbortController();
@@ -49,6 +71,7 @@ export const useExplore = (query: MediaType = 'movie', initialGenre: number | nu
       setLoading(true);
       setError(null);
       setPage(1);
+      setGenres([]);
       setData(emptyData);
       setActiveGenre(null);
 
@@ -69,32 +92,6 @@ export const useExplore = (query: MediaType = 'movie', initialGenre: number | nu
           isInitializingGenres.current = false;
           return;
         }
-
-        const defaultGenreId = getDefaultGenreId(query);
-        const preferredGenreId =
-          initialGenre && isValidGenre(initialGenre, fetchedGenres)
-            ? initialGenre
-            : defaultGenreId;
-        const selectedGenreId = isValidGenre(preferredGenreId, fetchedGenres)
-          ? preferredGenreId
-          : fetchedGenres[0].id;
-
-        const dataRes =
-          query === 'movie'
-            ? await fetchGenreMovies(selectedGenreId, 1, signal)
-            : query === 'anime'
-              ? await fetchAnimeTV(selectedGenreId, 1, signal)
-              : await fetchGenreTVShows(selectedGenreId, 1, signal);
-
-        if (!isMounted || thisRequest !== requestId.current) {
-          return;
-        }
-
-        setData({
-          results: dataRes.data.results || [],
-          total_pages: Math.min(dataRes.data.total_pages || 1, 500),
-        });
-        setActiveGenre(selectedGenreId);
       } catch (err) {
         const apiError = err as ApiErrorShape;
 
@@ -110,15 +107,26 @@ export const useExplore = (query: MediaType = 'movie', initialGenre: number | nu
       }
     };
 
-    if (hasQueryChanged || activeGenre === null) {
-      void loadInitialData();
-    }
+    void loadInitialData();
 
     return () => {
       isMounted = false;
       controller.abort();
     };
-  }, [activeGenre, initialGenre, query]);
+  }, [query]);
+
+  useEffect(() => {
+    if (!genres.length) {
+      return;
+    }
+
+    const nextGenre = resolveGenreId(requestedGenre, genres, query);
+
+    setPage(1);
+    setActiveGenre((currentGenre) =>
+      currentGenre === nextGenre ? currentGenre : nextGenre
+    );
+  }, [genres, requestedGenre, query]);
 
   useEffect(() => {
     if (!activeGenre || isInitializingGenres.current) return;
@@ -170,15 +178,6 @@ export const useExplore = (query: MediaType = 'movie', initialGenre: number | nu
     };
   }, [activeGenre, page, query]);
 
-  const handleGenreChange = useCallback(
-    (genreId: number) => {
-      if (genreId === activeGenre) return;
-      setPage(1);
-      setActiveGenre(genreId);
-    },
-    [activeGenre]
-  );
-
   const handlePageChange = useCallback(
     (newPage: number) => {
       if (newPage < 1 || newPage > (data.total_pages || 1)) return;
@@ -192,7 +191,6 @@ export const useExplore = (query: MediaType = 'movie', initialGenre: number | nu
     page,
     setPage: handlePageChange,
     activeGenre,
-    setActiveGenre: handleGenreChange,
     genres,
     data,
     loading,
