@@ -1,5 +1,3 @@
-"use client";
-
 type MediaDetailsErrorStateProps = {
   description: string;
   onRetry?: () => void;
@@ -13,8 +11,8 @@ export default function MediaDetailsErrorState({
 }: MediaDetailsErrorStateProps) {
   return (
     <section className="flex min-h-screen items-center justify-center bg-[#050505] px-4 py-10 text-[#e5e5e5]">
-      <div className="w-full max-w-lg rounded-[28px] border border-red-500/15 bg-white/[0.03] p-8 text-center shadow-2xl shadow-black/35">
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-red-400/20 bg-red-500/10 text-lg font-semibold text-red-300">
+      <div className="w-full max-w-lg rounded-xl border border-red-500/15 bg-white/[0.03] p-8 text-center shadow-2xl shadow-black/35">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-red-400/20 bg-red-500/10 text-lg font-semibold text-red-300">
           !
         </div>
         <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
