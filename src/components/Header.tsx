@@ -21,9 +21,10 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             </button>
             <Link
               to="/"
-              className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-red-600 bg-clip-text text-transparent"
+              className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-red-600 bg-clip-text text-transparent flex items-center justify-center "
             >
-              MovieVerse
+              <img src="/logo.svg" alt="Logo" className="size-10 mr-2" />
+              Movie <span className="text-white">Verse</span>
             </Link>
           </div>
 
