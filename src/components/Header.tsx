@@ -9,7 +9,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
 
   return (
     <>
-      <header className="bg-black/30 sticky top-0 z-50 backdrop-blur-md shadow-md md:block lg:block">
+      <header className="bg-black/40 sticky top-0 z-50 backdrop-blur shadow-md hidden md:block lg:block">
         <div className="container max-w-7xl mx-auto px-3 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button

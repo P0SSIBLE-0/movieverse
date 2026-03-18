@@ -5,12 +5,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import VideoPlayerModal from "@/components/VideoPlayerModal";
-import Spinner from "@/components/Spinner";
 import MediaInfo from "@/components/details/MediaInfo";
 import StreamPlayer from "@/components/details/StreamPlayer";
 import CastSection from "@/components/details/CastSection";
 import VideosSection from "@/components/details/VideosSection";
 import RecommendationsSection from "@/components/details/RecommendationsSection";
+import MediaDetailsSkeleton from "@/components/details/MediaDetailsSkeleton";
+import MediaDetailsErrorState from "@/components/details/MediaDetailsErrorState";
 import { useAppContext } from "@/context/AppContext";
 import useFetch from "@/hooks/useFetch";
 import { STREAMING_PROVIDERS } from "@/services/streamingApi";
@@ -118,27 +119,26 @@ export default function MediaDetailsPageClient({
   };
 
   if (loadingConfig || detailsLoading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#101010] text-white gap-4">
-        <Spinner />
-        <p className="text-sm text-white/40 tracking-wide">Loading details...</p>
-      </div>
-    );
+    return <MediaDetailsSkeleton />;
   }
 
   if (detailsError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#101010] text-red-400 text-lg p-8 text-center">
-        Error loading details: {detailsError}
-      </div>
+      <MediaDetailsErrorState
+        title="Unable to load the details"
+        description={detailsError}
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 
   if (!itemDetails) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#101010] text-white/50 text-lg">
-        No details available to display.
-      </div>
+      <MediaDetailsErrorState
+        title="No details available"
+        description="We couldn't find data for this title right now. Please try again in a moment."
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 
@@ -178,7 +178,7 @@ export default function MediaDetailsPageClient({
       <header className="w-full px-4 md:px-8 py-6 max-w-[1400px] mx-auto flex items-center relative">
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-2 text-white/40 backdrop-blur-md hover:text-white text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer"
+          className="inline-flex items-center gap-2 text-white/40 bg-black/40  px-3 py-2 rounded-full border border-black/20 backdrop-blur-md hover:text-white text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer"
           aria-label="Go back to previous page"
         >
           <ArrowLeftIcon className="size-4" />
@@ -223,7 +223,7 @@ export default function MediaDetailsPageClient({
         </div>
 
         {streamEmbedUrl && (
-          <div className="w-full mb-16 md:mb-24 mt-2">
+          <div className="w-full mb-5 md:mb-15 mt-2">
             {streamError && (
               <div className="container mx-auto px-4 md:px-8">
                 <div className="bg-red-500/10 border border-red-500/20 text-red-300 rounded-xl p-3 flex justify-between items-center text-sm mb-2">
@@ -259,10 +259,9 @@ export default function MediaDetailsPageClient({
               onError={(error) => {
                 console.error("Stream error:", error);
                 setStreamError(
-                  `Failed to load stream from ${
-                    STREAMING_PROVIDERS.find(
-                      (provider) => provider.id === selectedProvider
-                    )?.name || "provider"
+                  `Failed to load stream from ${STREAMING_PROVIDERS.find(
+                    (provider) => provider.id === selectedProvider
+                  )?.name || "provider"
                   }. Trying another source...`
                 );
 
