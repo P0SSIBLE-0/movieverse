@@ -33,7 +33,7 @@ const BottomNav = () => {
             key={item.path}
             to={item.path}
             className={({ isActive: active }) =>
-              `flex flex-col items-center justify-center p-2 flex-1 transition-colors ${isActive(item.path)
+              `flex flex-col items-center justify-center p-1.5 flex-1 transition-colors ${isActive(item.path)
                 ? 'text-yellow-500'
                 : 'text-gray-300 hover:text-white'
               }`

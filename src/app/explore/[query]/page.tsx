@@ -1,32 +1,96 @@
 'use client';
 
-import { useParams, useLocation } from "@/lib/react-router-dom";
+import { useCallback, useEffect, useMemo } from "react";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import MovieCard from "@/components/MovieCard";
 import Spinner from "@/components/Spinner";
 import { useExplore } from "@/hooks/useExplore";
-import { useEffect } from "react";
 import type { Genre, MediaItem, MediaType, PaginatedResponse } from "@/types";
 
+const DEFAULT_MEDIA_TYPE: MediaType = "movie";
+
+function getMediaType(value: string | undefined): MediaType {
+  return value === "movie" || value === "tv" || value === "anime"
+    ? value
+    : DEFAULT_MEDIA_TYPE;
+}
+
+function getGenreParam(value: string | null): number | null {
+  if (!value) {
+    return null;
+  }
+
+  const parsedValue = Number(value);
+
+  return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null;
+}
+
 export default function Page() {
-  const { query = "movie" } = useParams<{ query?: MediaType }>();
-  const location = useLocation();
-  const genreParam = Number(new URLSearchParams(location.search).get("genre")) || null;
+  const params = useParams<{ query?: string }>();
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const query = getMediaType(params.query);
+  const rawGenreParam = searchParams.get("genre");
+  const genreParam = getGenreParam(rawGenreParam);
   const {
     page,
     setPage,
     activeGenre,
-    setActiveGenre,
     genres,
     data = { results: [], total_pages: 0 } as PaginatedResponse<MediaItem>,
     loading,
     error,
   } = useExplore(query, genreParam);
+  const uniqueGenres = useMemo(
+    () =>
+      genres?.filter(
+        (genre: Genre, index: number, self: Genre[]) =>
+          index === self.findIndex((item) => item.id === genre.id)
+      ) || [],
+    [genres]
+  );
+
+  const handleGenreChange = useCallback(
+    (genreId: number) => {
+      if (!pathname || genreParam === genreId) {
+        return;
+      }
+
+      const nextSearchParams = new URLSearchParams(searchParams.toString());
+      nextSearchParams.set("genre", String(genreId));
+      router.replace(`${pathname}?${nextSearchParams.toString()}`, {
+        scroll: false,
+      });
+    },
+    [genreParam, pathname, router, searchParams]
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [genreParam, query]);
 
+  useEffect(() => {
+    if (!pathname || !activeGenre || rawGenreParam === String(activeGenre)) {
+      return;
+    }
+
+    if (rawGenreParam && genreParam !== null) {
+      return;
+    }
+
+    const nextSearchParams = new URLSearchParams(searchParams.toString());
+    nextSearchParams.set("genre", String(activeGenre));
+    router.replace(`${pathname}?${nextSearchParams.toString()}`, {
+      scroll: false,
+    });
+  }, [activeGenre, genreParam, pathname, rawGenreParam, router, searchParams]);
 
   // Show loading state
   if (loading && !data?.results?.length) {
@@ -61,11 +125,6 @@ export default function Page() {
     );
   }
 
-  // Filter out duplicate genres by ID
-  const uniqueGenres = genres?.filter((genre: Genre, index: number, self: Genre[]) =>
-    index === self.findIndex((g) => g.id === genre.id)
-  ) || [];
-
   return (
     <div className="container mx-auto p-4 py-6 min-h-screen text-white pb-16">
       <h1 className="text-2xl font-bold mb-4 text-left text-gray-200">
@@ -81,7 +140,7 @@ export default function Page() {
                 ? "bg-zinc-900/80 box-border border-yellow-500 text-yellow-400"
                 : ""
                 }`}
-              onClick={() => setActiveGenre(genre.id)}
+              onClick={() => handleGenreChange(genre.id)}
               disabled={loading}
             >
               {genre.name}

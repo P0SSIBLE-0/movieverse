@@ -9,21 +9,22 @@ const Header = ({ onMenuClick }: HeaderProps) => {
 
   return (
     <>
-      <header className="bg-black/30 sticky top-0 z-50 backdrop-blur-md shadow-md hidden md:block lg:block">
+      <header className="bg-black/40 sticky top-0 z-50 backdrop-blur shadow-md hidden md:block lg:block">
         <div className="container max-w-7xl mx-auto px-3 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button
               onClick={onMenuClick}
-              className="lg:hidden md:hidden text-gray-300 hover:text-white mr-2"
+              className="lg:hidden hidden md:hidden text-gray-300 hover:text-white mr-2"
               aria-label="Open menu"
             >
               <Bars3Icon className="h-6 w-6" />
             </button>
             <Link
               to="/"
-              className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-red-600 bg-clip-text text-transparent"
+              className="md:text-2xl text-lg font-bold bg-gradient-to-r from-yellow-500 to-red-600 bg-clip-text text-transparent flex items-center justify-center "
             >
-              MovieVerse
+              <img src="/logo.svg" alt="Logo" className="size-10 mr-2" />
+              Movie <span className="text-white">Verse</span>
             </Link>
           </div>
 
@@ -40,7 +41,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             {/* Mobile Search Button */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors"
+              className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-zinc-900/90 hover:bg-zinc-800/90 text-zinc-300 hover:text-white transition-colors"
               aria-label="Search"
             >
               <MagnifyingGlassIcon className="h-5 w-5" />
