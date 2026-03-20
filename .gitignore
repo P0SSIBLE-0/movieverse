@@ -20,7 +20,6 @@ dist-ssr
 .npmrc
 
 # Editor directories and files
-sw.js
 .agents
 skills-lock.json
 .vscode/*
